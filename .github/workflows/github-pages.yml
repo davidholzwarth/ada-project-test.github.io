@@ -1,15 +1,24 @@
 name: Deploy to GitHub Pages
-
 on:
   push:
     branches:
       - master
-
 jobs:
   github-pages:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses:  helaili/jekyll-action@v2
+      - uses: actions/checkout@v4  # Updated to v4
+      
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          
+      - name: Build and Deploy
+        uses: helaili/jekyll-action@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          target_branch: 'gh-pages'  # Optional: specify if you want to deploy to a different branch
+        env:
+          JEKYLL_PAT: ${{ secrets.GITHUB_TOKEN }}
